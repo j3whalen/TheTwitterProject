@@ -1,22 +1,30 @@
+<div class="chart">
+<canvas id="myChart" width="400" height="400"></canvas>
+</div>
 
 <h1>Result One</h1>
+<h2 id="first">{{first}}</h2>
 {{#each results1}}
 <ul>
-    <li>{{this}}</li>
+    <li class="result1">{{this}}</li>
 </ul>
 {{/each}}
 
 
 <h1>Result two</h1>
+<h2 id="second">{{second}}</h2>
 {{#each results2}}
 <ul>
-    <li>{{this}}</li>
+    <li class="result2">{{this}}</li>
 </ul>
 {{/each}}
 
 <h1>For These Days</h1>
 {{#each dates}}
 <ul>
-    <li>{{this}}</li>
+    <li class="dates">{{this}}</li>
 </ul>
 {{/each}}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script src="javascripts/graph.js"></script>

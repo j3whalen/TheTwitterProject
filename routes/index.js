@@ -10,8 +10,9 @@ var client = new Twitter({
 });
 
 //Global Variables
-
 var dates = getArrayOfLastWeekDates();
+var UserQuery1 = "";
+var UserQuery2 ="";
 var Query1Tweets = [
   [],
   [],
@@ -38,20 +39,23 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/search', function (req, res, next) {
-  var UserQuery1 = req.body.search1;
-  var UserQuery2 = req.body.search2;
+  UserQuery1 = req.body.search1;
+  UserQuery2 = req.body.search2;
   var queries = [];
   queries.push(UserQuery1);
   queries.push(UserQuery2);
 
+
   GetTweetsAndComputeSentiment(queries, dates).then((results) => {
     res.render('result', {
+      first: UserQuery1,
+      second: UserQuery2,
       dates: dates,
       results1: results[0],
       results2: results[1]
     });
   });
-});
+ });
 
 async function GetTweetsAndComputeSentiment(queries, dates) {
   var sentiment1 = [];
