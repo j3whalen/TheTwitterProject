@@ -29,11 +29,12 @@ const z7 = (document.getElementsByClassName("dates")[6].innerHTML);
 let linegraph = new Chart(chart, {
     type: 'line',
     data: {
-        labels: [z1, z2, z3, z4, z5, z6, z7],
+        labels: [z7, z6, z5, z4, z3, z2, z1],
         datasets: [{
             label: first,
+            lineTension: 0,
             fill: false,
-            data: [x1, x2, x3, x4, x5, x6, x7],
+            data: [x7, x6, x5, x4, x3, x2, x1],
             backgroundColor: [
                 '#DA0505'
             ],
@@ -44,8 +45,9 @@ let linegraph = new Chart(chart, {
         },
         {
             label: second,
+            lineTension: 0,
             fill: false,
-            data: [y1, y2, y3, y4, y5, y6, y7],
+            data: [y7, y6, y5, y4, y3, y2, y1],
             backgroundColor: [
                '#0505DA'
             ],
