@@ -1,10 +1,65 @@
-<h1>Search 1</h1>
+<h1 class="title text-center">The Twitter Project</h1>
 <form action="/search" method="post">
-<input type="text" name="search1">
-<h1>Search 2</h1>
-<input type="text" name="search2">
-<input type="submit">
+    <div id="searchinputs" class="container-fluid">
+        <div class="row text-center">
+            <div class="col-md-6">
+                <h1 class="searchbox">Search 1</h1>
+                <input type="text" name="search1">
+            </div>
+            <div class="col-md-6">
+                <h1 class="searchbox">Search 2</h1>
+                <input type="text" name="search2">
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-12">
+                <input type="submit" onclick="Load()">
+            </div>
+        </div>
+    </div>
 </form>
+<div id="wait" class="center">Please Wait While We Compile 1,400 Tweets. This May Take A Few Seconds</div>
 
-{{!-- <div class="loader"></div>
- --}}
+<div id="loader" class="center loader text-center"></div>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+
+
+        {{!-- $("#wait").fadeIn("slow", function(){
+            $("#wait").fadeOut("slow", function(){
+                $("#wait").fadeIn("slow", function(){
+                    $("#wait").fadeOut("slow", function(){
+                        $("#wait").fadeIn("slow");
+                    })
+                });
+            });
+        }); --}}
+
+<script>
+    function Load() {
+        var x = document.getElementById("searchinputs");
+        var loader = document.getElementById("loader");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+
+        if (loader.style.display === "block") {
+            loader.style.display = "none";
+        } else {
+            loader.style.display = "block";
+        }
+
+        
+animate();
+    }
+    function animate(){
+        $("#wait").fadeIn(1200,function(){
+            $("#wait").fadeOut(300);
+            animate();
+        });
+    }
+</script>

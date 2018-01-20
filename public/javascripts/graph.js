@@ -32,6 +32,7 @@ let linegraph = new Chart(chart, {
         labels: [z7, z6, z5, z4, z3, z2, z1],
         datasets: [{
             label: first,
+            easing:'linear',
             lineTension: 0,
             fill: false,
             data: [x7, x6, x5, x4, x3, x2, x1],
@@ -56,5 +57,9 @@ let linegraph = new Chart(chart, {
             ],
             borderWidth: 1
         }]
+    },
+    options:{
+        responsive: true,
+
     }
 });

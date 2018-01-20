@@ -101,6 +101,7 @@ function get100Tweets(query, day) {
         for (var i = 0; i < tweets.statuses.length; i++) {
           listoftweets.push(tweets.statuses[i].full_text); //text
         }
+        console.log(tweets.statuses.length);
         resolve(listoftweets);
       } else {
         console.log("error getting tweets");
