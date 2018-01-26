@@ -2,6 +2,7 @@
 <canvas id="myChart" width="400" height="400"></canvas>
 </div>
 
+<div class="hide">
 <h1>Result One</h1>
 <h2 id="first">{{first}}</h2>
 {{#each results1}}
@@ -10,12 +11,23 @@
 </ul>
 {{/each}}
 
+{{#each gresults1}}
+<ul>
+    <li class="gresults1">{{this}}</li>
+</ul>
+{{/each}}
 
 <h1>Result two</h1>
 <h2 id="second">{{second}}</h2>
 {{#each results2}}
 <ul>
     <li class="result2">{{this}}</li>
+</ul>
+{{/each}}
+
+{{#each gresults2}}
+<ul>
+    <li class="gresults2">{{this}}</li>
 </ul>
 {{/each}}
 
@@ -26,5 +38,10 @@
 </ul>
 {{/each}}
 
+</div>
+
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script src="javascripts/graph.js"></script>
+
