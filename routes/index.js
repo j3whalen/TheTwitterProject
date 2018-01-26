@@ -1,6 +1,7 @@
 var sentiment = require('sentiment');
 var express = require('express');
 var Twitter = require('twitter');
+var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
 var router = express.Router();
 const language = require('@google-cloud/language');
 var client = new Twitter({
@@ -8,6 +9,13 @@ var client = new Twitter({
   consumer_secret: 'L6cfzO32msfAEjQe7gJF5inieLH2O95twoWYpwy2s6NKCOwsY3',
   access_token_key: '945822571982917632-NV2nlQcAzg8eViItlsaPdnliXoUmoow',
   access_token_secret: 'beV5qIzCYewBsWTMkaTAGEqS7gXcu5WvgjsX3rFwPBrEX'
+});
+
+var tone_analyzer = new ToneAnalyzerV3({
+  username: '26d3b9e9-a484-4395-b498-343872f3e704',
+  password: 'JEKwPJ0j3jIB',
+  version: 'v3',
+  version_date: '2018-01-18'
 });
 // Imports the Google Cloud client library
 //set GOOGLE_APPLICATION_CREDENTIALS=C:/Users/Josh/Downloads/TheTwitterProject-eb165a0fdc4b.json
@@ -59,8 +67,10 @@ router.post('/search', function (req, res, next) {
       dates: datesToDisplay,
       results1: results[0],
       results2: results[1],
-      gresults1: results[2],
-      gresults2: results[3]
+      iresults1: results[2],
+      iresults2: results[3],
+      gresults1: results[4],
+      gresults2: results[5]
     });
   });
  });
@@ -70,10 +80,23 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
   var sentiment2 = [];
   var googleSentimentarray1 = [.3,.5,0,-.2,.1,.2,.3];
   var googleSentimentarray2 = [-.3,-.5,0,.2,-.1,-.2,-.3];
+  var ibmScore1 = [];
+  var ibmScore2 =[];
+
   for(var j = 0; j < 2; j++){
     for (var i = 0; i < dates.length; i++) {
-      var tweets = await getTweets(queries[j], dates[i], 15, "mixed");
+      var tweets = await getTweets(queries[j], dates[i], 3, "mixed");
       var sentiment = await getSentiment(tweets);
+      console.log("just before IbmTweets");
+      var ibmTweets = await getTweets(queries[j], dates[i], 3, "mixed");
+      var ibmScore = 0;
+      var ibmCurrentScore = 0;
+      for(var x= 0; x < ibmTweets.length; x++){
+        ibmScore = ibmScore + (await getOneIbmScore(ibmTweets[x]));
+        console.log("IBM score: ", ibmScore);
+      }
+
+
       // var googleTweets = await getTweets(queries[j], dates[i], 3, "popular");
       // var googleSentiment = 0;
       // for(var z= 0; z < googleTweets.length; z++){
@@ -83,15 +106,42 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
       
       if(j === 0){
         sentiment1.push(sentiment);
+        ibmScore1.push(ibmScore);
         //googleSentimentarray1.push(googleSentiment);
+
       }
       else{
         sentiment2.push(sentiment);
+        ibmScore2.push(ibmScore);
         //googleSentimentarray2.push(googleSentiment);
+
       }
     }
   }
-  return [sentiment1, sentiment2, googleSentimentarray1, googleSentimentarray2];
+  return [sentiment1, sentiment2, googleSentimentarray1, googleSentimentarray2, ibmScore1, ibmScore2];
+}
+
+function getOneIbmScore(tweets){
+  return new Promise(resolve => {
+    tone_analyzer.tone(
+      {
+        tone_input: tweets,
+        content_type: 'text/plain'
+      },
+      function(err, tone) {
+        if (err) {
+          console.log("Ran out of stuff?");
+          console.log(err);
+        } else {
+          // console.log('tone endpoint:');
+          // console.log(JSON.stringify(tone, null, 2));
+          // console.log("score",tone.document_tone.tones[0].score);
+          ibmCurrentScore = tone.document_tone.tones[0].score;
+          resolve(ibmCurrentScore);
+        }
+      }
+    );
+  });
 }
 
 function getSentiment(tweets) {
