@@ -47,6 +47,25 @@ var Query2Tweets = [
   []
 ];
 
+
+var emotion = {
+  Anger: 0,
+  Fear: 0,
+  Joy: 0,
+  Sadness: 0,
+  Analytical: 0,
+  Confident: 0,
+  Tentative: 0,
+  AngerScore: 0,
+  FearScore: 0,
+  JoyScore: 0,
+  SadnessScore: 0,
+  AnalyticalScore: 0,
+  ConfidentScore: 0,
+  TentativeScore: 0
+};
+
+
 router.get('/', function (req, res, next) {
   res.status(200).render('index', {
     title: 'The Twitter Project'
@@ -85,18 +104,20 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
 
   for(var j = 0; j < 2; j++){
     for (var i = 0; i < dates.length; i++) {
-      var tweets = await getTweets(queries[j], dates[i], 3, "mixed");
+      var tweets = await getTweets(queries[j], dates[i], 1, "mixed");
       var sentiment = await getSentiment(tweets);
       console.log("just before IbmTweets");
-      var ibmTweets = await getTweets(queries[j], dates[i], 3, "mixed");
+      var ibmTweets = await getTweets(queries[j], dates[i], 1, "mixed");
       var ibmScore = 0;
+      var ibmName =0;
       var ibmCurrentScore = 0;
+      var ibmCurrentName = 0;
       for(var x= 0; x < ibmTweets.length; x++){
         ibmScore = ibmScore + (await getOneIbmScore(ibmTweets[x]));
-        console.log("IBM score: ", ibmScore);
+        ibmName = ibmName + (await getOneIbmName(ibmTweets[x]));
       }
-
-
+      
+      // Can put these all one one line.
       // var googleTweets = await getTweets(queries[j], dates[i], 3, "popular");
       // var googleSentiment = 0;
       // for(var z= 0; z < googleTweets.length; z++){
@@ -118,8 +139,82 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
       }
     }
   }
+  var finalAnger = emotion.AngerScore / emotion.Anger;
+  var finalFear = emotion.FearScore / emotion.Fear;
+  var finalJoy = emotion.JoyScore / emotion.Joy;
+  var finalSadness = emotion.SadnessScore / emotion.Sadness;
+  var finalAnalytical = emotion.AnalyticalScore / emotion.Analytical;
+  var finalConfident = emotion.ConfidentScore / emotion.Confident;
+  var finalTentative = emotion.TentativeScore / emotion.Tentative;
+
   return [sentiment1, sentiment2, googleSentimentarray1, googleSentimentarray2, ibmScore1, ibmScore2];
 }
+
+// ~~~~~IBM NAME~~~~~~~
+// I know these if statments are gross
+
+function getOneIbmName(tweets){
+  return new Promise(resolve => {
+    tone_analyzer.tone(
+      {
+        tone_input: tweets,
+        content_type: 'text/plain'
+      },
+      function(err, tone) {
+        if (err) {
+          console.log(err);
+        }
+        if (tone.document_tone.tones[0] != null) 
+        {
+          ibmCurrentName = tone.document_tone.tones[0].tone_name;
+          console.log("~~~~~~~~~~~" + ibmCurrentName);
+
+            if (tone.document_tone.tones[0].tone_name === "Anger" ){
+              emotion.Anger++;
+              console.log("Anger : " + emotion.Anger)
+            }
+            if (tone.document_tone.tones[0].tone_name === "Fear" ){
+              emotion.Fear++;
+              console.log("Fear: " + emotion.Fear)
+            }
+            if (tone.document_tone.tones[0].tone_name === "Joy" ){
+              emotion.Joy++;
+              console.log("Joy: " + emotion.Joy)
+            }
+            if (tone.document_tone.tones[0].tone_name === "Sadness" ){
+              emotion.Sadness++;
+              console.log("Sadness: " + emotion.Sadness)
+            }
+            if (tone.document_tone.tones[0].tone_name === "Analytical" ){
+              emotion.Analytical++;
+              console.log("Analytical: " + emotion.Analytical)
+            }
+            if (tone.document_tone.tones[0].tone_name === "Confident" ){
+              emotion.Confident++;
+              console.log("Confident: " + emotion.Confident)
+            }
+            if (tone.document_tone.tones[0].tone_name === "Tentative" ){
+              emotion.Tentative++;
+              console.log("Tentative: " + emotion.Tentative)
+            }
+            console.log(" ");
+          resolve(ibmCurrentName)
+        }
+        else {
+          // console.log('tone endpoint:');
+          // console.log(JSON.stringify(tone, null, 2));
+          // console.log("score",tone.document_tone.tones[0].score);
+          // ibmCurrentScore = tone.document_tone.tones[0].tone_name;
+          // resolve(ibmCurrentScore);
+          resolve(0);
+        }
+      }
+    );
+  });
+}
+
+
+// ~~~~~IBM SCORE~~~~~~~
 
 function getOneIbmScore(tweets){
   return new Promise(resolve => {
@@ -130,14 +225,48 @@ function getOneIbmScore(tweets){
       },
       function(err, tone) {
         if (err) {
-          console.log("Ran out of stuff?");
           console.log(err);
-        } else {
-          // console.log('tone endpoint:');
-          // console.log(JSON.stringify(tone, null, 2));
-          // console.log("score",tone.document_tone.tones[0].score);
+        }
+        if (tone.document_tone.tones[0] != null) 
+        {
           ibmCurrentScore = tone.document_tone.tones[0].score;
-          resolve(ibmCurrentScore);
+          console.log("CURRENT SCORE: " + ibmCurrentScore)
+
+          if (tone.document_tone.tones[0].score === "Anger" ){
+            emotion.AngerScore = emotion.AngerScore + ibmCurrentScore;
+            console.log("This is emotion.AngerScore: " + emotion.AngerScore)
+          }
+          if (tone.document_tone.tones[0].tone_name === "Fear" ){
+            emotion.FearScore = emotion.FearScore + ibmCurrentScore;
+            console.log("This is emotion.FearScore: " + emotion.FearScore)
+          }
+          if (tone.document_tone.tones[0].tone_name === "Joy" ){
+            emotion.JoyScore = emotion.JoyScore + ibmCurrentScore;
+            console.log("This is emotion.joyScore: " + emotion.JoyScore)
+          }
+          if (tone.document_tone.tones[0].tone_name === "Sadness" ){
+            emotion.SadnessScore = emotion.SadnessScore + ibmCurrentScore;
+            console.log("This is emotion.SadnessScore: " + emotion.SadnessScore)
+          }
+          if (tone.document_tone.tones[0].tone_name === "Analytical" ){
+            emotion.AnalyticalScore = emotion.AnalyticalScore + ibmCurrentScore;
+            console.log("This is emotion.AnalyticalScore: " + emotion.AnalyticalScore)
+          }
+          if (tone.document_tone.tones[0].tone_name === "Confident" ){
+            emotion.ConfidentScore = emotion.ConfidentScore + ibmCurrentScore;
+            console.log("This is emotion.ConfidentScore: " + emotion.ConfidentScore)
+          }
+          if (tone.document_tone.tones[0].tone_name === "Tentative" ){
+            emotion.TentativeScore = emotion.TentativeScore + ibmCurrentScore;
+            console.log("This is emotion.TentativeScore: " + emotion.TentativeScore)
+          }
+
+
+
+          resolve(ibmCurrentScore)
+        }
+        else {
+          resolve(0);
         }
       }
     );
