@@ -1,6 +1,8 @@
 const chart = document.getElementById("myChart");
 const first = document.getElementById("first").innerHTML;
 const second = document.getElementById("second").innerHTML;
+const pieChart = document.getElementById("pChart");
+// const third = document.getElementById("third").innerHTML;
 
 const x1 = parseFloat(document.getElementsByClassName("result1")[0].innerHTML);
 const x2 = parseFloat(document.getElementsByClassName("result1")[1].innerHTML);
@@ -41,6 +43,15 @@ const z4 = (document.getElementsByClassName("dates")[3].innerHTML);
 const z5 = (document.getElementsByClassName("dates")[4].innerHTML);
 const z6 = (document.getElementsByClassName("dates")[5].innerHTML);
 const z7 = (document.getElementsByClassName("dates")[6].innerHTML);
+
+const e0 = (document.getElementsByClassName("iresults1")[0].innerHTML);
+const e1 = (document.getElementsByClassName("iresults1")[1].innerHTML);
+const e2 = (document.getElementsByClassName("iresults1")[2].innerHTML);
+const e3 = (document.getElementsByClassName("iresults1")[3].innerHTML);
+const e4 = (document.getElementsByClassName("iresults1")[4].innerHTML);
+const e5 = (document.getElementsByClassName("iresults1")[5].innerHTML);
+const e6 = (document.getElementsByClassName("iresults1")[6].innerHTML);
+
 
 let linegraph = new Chart(chart, {
     type: 'line',
@@ -106,4 +117,19 @@ let linegraph = new Chart(chart, {
         responsive: true,
 
     }
+});
+
+var myPieChart = new Chart(pieChart,{
+    type: 'pie',
+    data: {
+        labels: ["Green", "Blue", "Gray", "Purple", "Yellow", "Red", "Black"],
+        datasets: [{
+            backgroundColor: [
+                '#DA0505'
+            ],
+            data: [10,5,4,3,7,5,4],
+        },
+    ]
+    },
+
 });

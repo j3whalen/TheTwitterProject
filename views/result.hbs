@@ -2,7 +2,13 @@
 <canvas id="myChart" width="400" height="400"></canvas>
 </div>
 
-<div class="hide">
+<div class="pieChart">
+    <canvas id="pChart" width="400" height="400"></canvas>
+</div>
+
+
+
+{{!-- <div class="hide"> --}}
 <h1>Result One</h1>
 <h2 id="first">{{first}}</h2>
 {{#each results1}}
@@ -31,6 +37,16 @@
 </ul>
 {{/each}}
 
+
+<h1>Watson Results</h1>
+<h2 id="third"></h2>
+{{#each iresults1}}
+<ul>
+    <li class="iresults1">{{this}}</li>
+</ul>
+{{/each}}
+
+
 <h1>For These Days</h1>
 {{#each dates}}
 <ul>
@@ -38,7 +54,7 @@
 </ul>
 {{/each}}
 
-</div>
+{{!-- </div> --}}
 
 
 

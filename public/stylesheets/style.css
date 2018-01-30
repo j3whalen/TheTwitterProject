@@ -10,6 +10,13 @@ a {
   display: none;
 }
 
+.pieChart{
+  width: 550px;
+  height: 550px;
+}
+
+
+
 .chart{
   width: 550px;
   height: 550px;

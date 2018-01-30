@@ -86,11 +86,12 @@ router.post('/search', function (req, res, next) {
       dates: datesToDisplay,
       results1: results[0],
       results2: results[1],
-      iresults1: results[2],
-      iresults2: results[3],
-      gresults1: results[4],
-      gresults2: results[5]
+      gresults1: results[2],
+      gresults2: results[3],
+      iresults1: results[4]
     });
+    console.log("reults1 " + results[0])
+    console.log("iresults1 " + results[4])
   });
  });
 
@@ -101,6 +102,7 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
   var googleSentimentarray2 = [-.3,-.5,0,.2,-.1,-.2,-.3];
   var ibmScore1 = [];
   var ibmScore2 =[];
+  var finalAllEmotional = [];
 
   for(var j = 0; j < 2; j++){
     for (var i = 0; i < dates.length; i++) {
@@ -109,7 +111,7 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
       console.log("just before IbmTweets");
       var ibmTweets = await getTweets(queries[j], dates[i], 1, "mixed");
       var ibmScore = 0;
-      var ibmName =0;
+      var ibmName = 0;
       var ibmCurrentScore = 0;
       var ibmCurrentName = 0;
       for(var x= 0; x < ibmTweets.length; x++){
@@ -139,16 +141,44 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
       }
     }
   }
+  
   var finalAnger = emotion.AngerScore / emotion.Anger;
+  finalAllEmotional.push(finalAnger);
+  
   var finalFear = emotion.FearScore / emotion.Fear;
-  var finalJoy = emotion.JoyScore / emotion.Joy;
-  var finalSadness = emotion.SadnessScore / emotion.Sadness;
-  var finalAnalytical = emotion.AnalyticalScore / emotion.Analytical;
-  var finalConfident = emotion.ConfidentScore / emotion.Confident;
-  var finalTentative = emotion.TentativeScore / emotion.Tentative;
+  finalAllEmotional.push(finalFear)
 
-  return [sentiment1, sentiment2, googleSentimentarray1, googleSentimentarray2, ibmScore1, ibmScore2];
+  var finalJoy = emotion.JoyScore / emotion.Joy;
+  finalAllEmotional.push(finalJoy);
+  
+  var finalSadness = emotion.SadnessScore / emotion.Sadness;
+  finalAllEmotional.push(finalSadness);
+  
+  var finalAnalytical = emotion.AnalyticalScore / emotion.Analytical;
+  finalAllEmotional.push(finalAnalytical);
+ 
+  var finalConfident = emotion.ConfidentScore / emotion.Confident;
+  finalAllEmotional.push( finalConfident);
+  
+  var finalTentative = emotion.TentativeScore / emotion.Tentative;
+  finalAllEmotional.push(finalTentative);
+
+  console.log("FINAL EMOTIONAL SCORE " + finalAllEmotional)
+
+  return [sentiment1, sentiment2, googleSentimentarray1, googleSentimentarray2, finalAllEmotional];
 }
+
+// function getNum(val) {
+//   if (isNaN(val)) {
+//     val = 0;
+//     return val;
+//   }
+//   return val;
+// }
+
+
+
+
 
 // ~~~~~IBM NAME~~~~~~~
 // I know these if statments are gross
