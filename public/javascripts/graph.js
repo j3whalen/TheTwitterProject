@@ -2,6 +2,7 @@ const chart = document.getElementById("myChart");
 const first = document.getElementById("first").innerHTML;
 const second = document.getElementById("second").innerHTML;
 const pieChart = document.getElementById("pChart");
+const pieChart2 = document.getElementById("pChart2");
 // const third = document.getElementById("third").innerHTML;
 
 const x1 = parseFloat(document.getElementsByClassName("result1")[0].innerHTML);
@@ -51,6 +52,15 @@ const e3 = (document.getElementsByClassName("iresults1")[3].innerHTML);
 const e4 = (document.getElementsByClassName("iresults1")[4].innerHTML);
 const e5 = (document.getElementsByClassName("iresults1")[5].innerHTML);
 const e6 = (document.getElementsByClassName("iresults1")[6].innerHTML);
+
+const p0 = (document.getElementsByClassName("iresults2")[0].innerHTML);
+const p1 = (document.getElementsByClassName("iresults2")[1].innerHTML);
+const p2 = (document.getElementsByClassName("iresults2")[2].innerHTML);
+const p3 = (document.getElementsByClassName("iresults2")[3].innerHTML);
+const p4 = (document.getElementsByClassName("iresults2")[4].innerHTML);
+const p5 = (document.getElementsByClassName("iresults2")[5].innerHTML);
+const p6 = (document.getElementsByClassName("iresults2")[6].innerHTML);
+
 
 
 let linegraph = new Chart(chart, {
@@ -122,12 +132,45 @@ let linegraph = new Chart(chart, {
 var myPieChart = new Chart(pieChart,{
     type: 'pie',
     data: {
-        labels: ["Green", "Blue", "Gray", "Purple", "Yellow", "Red", "Black"],
+        labels: ["Anger", "Fear", "Joy", "Sadness", "Analytical", "Confident", "Tentative"],
         datasets: [{
             backgroundColor: [
-                '#DA0505'
+                '#DA0505',
+                '#4286f4',
+                '#efec3e',
+                '#50ef3e',
+                '#e03eef',
+                '#8ef6f9',
+                '#f9bc90'
             ],
-            data: [10,5,4,3,7,5,4],
+            borderColor:[
+
+            ],
+            data: [e0,e1,e2,e3,e4,e5,e6],
+        },
+    ]
+    },
+
+});
+
+var myPieChart2 = new Chart(pieChart2,{
+    type: 'pie',
+    data: {
+        labels: ["Anger", "Fear", "Joy", "Sadness", "Analytical", "Confident", "Tentative"],
+        datasets: [{
+            backgroundColor: [
+                '#DA0505',
+                '#4286f4',
+                '#efec3e',
+                '#50ef3e',
+                '#e03eef',
+                '#8ef6f9',
+                '#f9bc90'
+            ],
+            borderColor:[
+
+            ],
+            data: [p0,p1,p2,p3,p4,p5,p6],
         },
     ]
     },

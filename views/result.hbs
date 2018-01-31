@@ -6,6 +6,9 @@
     <canvas id="pChart" width="400" height="400"></canvas>
 </div>
 
+<div class="pieChart2">
+    <canvas id="pChart2" width="400" height="400"></canvas>
+</div>
 
 
 {{!-- <div class="hide"> --}}
@@ -43,6 +46,14 @@
 {{#each iresults1}}
 <ul>
     <li class="iresults1">{{this}}</li>
+</ul>
+{{/each}}
+
+<h1>Watson Results 2</h1>
+<h2 id="fourth"></h2>
+{{#each iresults2}}
+<ul>
+    <li class="iresults2">{{this}}</li>
 </ul>
 {{/each}}
 
