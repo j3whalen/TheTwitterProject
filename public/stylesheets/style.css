@@ -20,7 +20,9 @@ a {
   height: 550px;
 }
 
-
+.img{
+  width: 100%;
+}
 
 .chart{
   width: 550px;
@@ -55,7 +57,7 @@ input[type=submit]{
   animation: spin 2s linear infinite;
 }
 html, body{
-  background-color: #000000 !important;
+  background-color: #ffffff !important;
 }
 .searchbox{
   color: #3500D3;

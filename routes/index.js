@@ -15,7 +15,7 @@ var tone_analyzer = new ToneAnalyzerV3({
   username: '26d3b9e9-a484-4395-b498-343872f3e704',
   password: 'JEKwPJ0j3jIB',
   version: 'v3',
-  version_date: '2018-01-18'
+  version_date: '2018-01-30'
 });
 // Imports the Google Cloud client library
 //set GOOGLE_APPLICATION_CREDENTIALS=C:/Users/Josh/Downloads/TheTwitterProject-eb165a0fdc4b.json
@@ -130,7 +130,7 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
     for (var i = 0; i < dates.length; i++) {
       var tweets = await getTweets(queries[j], dates[i], 1, "mixed");
       var sentiment = await getSentiment(tweets);
-      var ibmTweets = await getTweets(queries[j], dates[i], 2, "mixed");
+      var ibmTweets = await getTweets(queries[j], dates[i], 1, "mixed");
 
       for (var x = 0; x < ibmTweets.length; x++) {
         if(j===0){
