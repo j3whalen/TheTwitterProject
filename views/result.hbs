@@ -1,75 +1,87 @@
-
-<div class="chart" style="text-align:center">
-<canvas id="myChart" width="400" height="400"></canvas>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart-container" style="text-align:center">
+                <h1>Overall Sentiment</h1>
+                <canvas id="myChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="pieChart" style="text-align:center">
+                <h1>Overall Emotion For {{first}}</h1>
+                <canvas id="pChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="pieChart" style="text-align:center">
+                <h1>Overall Emotion For {{second}}</h1>
+                <canvas id="pChart2" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="pieChart" style="text-align:center">
-    <canvas id="pChart" width="400" height="400"></canvas>
-</div>
-
-<div class="pieChart2" style="text-align:center">
-    <canvas id="pChart2" width="400" height="400"></canvas>
-</div>
 
 
-{{!-- <div class="hide"> --}}
-<h1>Result One</h1>
-<h2 id="first">{{first}}</h2>
-{{#each results1}}
-<ul>
-    <li class="result1">{{this}}</li>
-</ul>
-{{/each}}
-
-{{#each gresults1}}
-<ul>
-    <li class="gresults1">{{this}}</li>
-</ul>
-{{/each}}
-
-<h1>Result two</h1>
-<h2 id="second">{{second}}</h2>
-{{#each results2}}
-<ul>
-    <li class="result2">{{this}}</li>
-</ul>
-{{/each}}
-
-{{#each gresults2}}
-<ul>
-    <li class="gresults2">{{this}}</li>
-</ul>
-{{/each}}
 
 
-<h1>Watson Results</h1>
-<h2 id="third"></h2>
-{{#each iresults1}}
-<ul>
-    <li class="iresults1">{{this}}</li>
-</ul>
-{{/each}}
-
-<h1>Watson Results 2</h1>
-<h2 id="fourth"></h2>
-{{#each iresults2}}
-<ul>
-    <li class="iresults2">{{this}}</li>
-</ul>
-{{/each}}
 
 
-<h1>For These Days</h1>
-{{#each dates}}
-<ul>
-    <li class="dates">{{this}}</li>
-</ul>
-{{/each}}
 
-{{!-- </div> --}}
+
+<div class="hide"> 
+    <h1>Result One</h1>
+    <h2 id="first">{{first}}</h2>
+    {{#each results1}}
+    <ul>
+        <li class="result1">{{this}}</li>
+    </ul>
+    {{/each}} {{#each gresults1}}
+    <ul>
+        <li class="gresults1">{{this}}</li>
+    </ul>
+    {{/each}}
+
+    <h1>Result two</h1>
+    <h2 id="second">{{second}}</h2>
+    {{#each results2}}
+    <ul>
+        <li class="result2">{{this}}</li>
+    </ul>
+    {{/each}} {{#each gresults2}}
+    <ul>
+        <li class="gresults2">{{this}}</li>
+    </ul>
+    {{/each}}
+
+
+    <h1>Watson Results</h1>
+    <h2 id="third"></h2>
+    {{#each iresults1}}
+    <ul>
+        <li class="iresults1">{{this}}</li>
+    </ul>
+    {{/each}}
+
+    <h1>Watson Results 2</h1>
+    <h2 id="fourth"></h2>
+    {{#each iresults2}}
+    <ul>
+        <li class="iresults2">{{this}}</li>
+    </ul>
+    {{/each}}
+
+
+    <h1>For These Days</h1>
+    {{#each dates}}
+    <ul>
+        <li class="dates">{{this}}</li>
+    </ul>
+    {{/each}}  </div> 
 
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <script src="javascripts/graph.js"></script>
-

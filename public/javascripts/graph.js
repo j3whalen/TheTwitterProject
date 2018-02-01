@@ -79,7 +79,7 @@ let linegraph = new Chart(chart, {
             borderColor: [
                 '#DA0505'
             ],
-            borderWidth: 1
+            borderWidth: 3
         },
         {
             label: first.concat(" For Google API"),
@@ -88,12 +88,12 @@ let linegraph = new Chart(chart, {
             fill: false,
             data: [gx7, gx6, gx5, gx4, gx3, gx2, gx1],
             backgroundColor: [
-                '#DA0500'
+                '#8c0909'
             ],
             borderColor: [
-                '#DA0500'
+                '#8c0909'
             ],
-            borderWidth: 1
+            borderWidth: 3
         },
         {
             label: second,
@@ -106,7 +106,7 @@ let linegraph = new Chart(chart, {
             borderColor: [
                 '#0505DA'
             ],
-            borderWidth: 1
+            borderWidth: 3
         },
         {
             label: second.concat(" For Google API"),
@@ -114,17 +114,18 @@ let linegraph = new Chart(chart, {
             fill: false,
             data: [gy7, gy6, gy5, gy4, gy3, gy2, gy1],
             backgroundColor: [
-               '#0005DA'
+               '#0e0c38'
             ],
             borderColor: [
-                '#0005DA'
+                '#0e0c38'
             ],
-            borderWidth: 1
+            borderWidth: 3
         }
     ]
     },
     options:{
         responsive: true,
+        maintainAspectRatio: false
 
     }
 });
@@ -150,6 +151,11 @@ var myPieChart = new Chart(pieChart,{
         },
     ]
     },
+    options:{
+        responsive: true,
+        maintainAspectRatio: false
+
+    }
 
 });
 
@@ -174,5 +180,10 @@ var myPieChart2 = new Chart(pieChart2,{
         },
     ]
     },
+    options:{
+        responsive: true,
+        maintainAspectRatio: false
+
+    }
 
 });

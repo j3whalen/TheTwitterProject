@@ -115,12 +115,19 @@ router.post('/search', function (req, res, next) {
 });
 
 async function GetTweetsAndComputeSentiment(queries, dates) {
+  // var sentiment1 = [.5,.5,.5,.5,.5,.5,.5];
+  // var sentiment2 = [.5,.5,.5,.5,.5,.5,.5];
+  // var finalAllEmotional = [.5,.5,.5,.5,.5,.5,.5];
+  // var finalAllEmotional2 = [.5,.5,.5,.5,.5,.5,.5];
+  // var googleSentimentarray1 = [.5,.5,.5,.5,.5,.5,.5];
+  // var googleSentimentarray2 = [.5,.5,.5,.5,.5,.5,.5];
   var sentiment1 = [];
   var sentiment2 = [];
   var finalAllEmotional = [];
   var finalAllEmotional2 = [];
-  var googleSentimentarray1 = [.3, .5, 0, -.2, .1, .2, .3];
-  var googleSentimentarray2 = [-.3, -.5, 0, .2, -.1, -.2, -.3];
+  var googleSentimentarray1 = [];
+  var googleSentimentarray2 = [];
+
   var ibmScore1 = [];
   var ibmScore2 = [];
   var ibmScore = 0;
@@ -129,7 +136,7 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
   var ibmCurrentName = 0;
 
   for (var j = 0; j < 2; j++) {
-    var IBMtweets = await getTweets(queries[j], "", 100, "mixed");
+    var IBMtweets = await getTweets(queries[j], "", 100, "mixed", "ibm");
     for (var x = 0; x < IBMtweets.length; x++) {
       if (j === 0) {
         IBMresults = ibmScore + (await CalculateIBM(emotion, IBMtweets[x])); //get one ibm score/name is where we need to cycle through all the sentences and grab the score and names.
@@ -140,29 +147,29 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
       }
     }
     for (var i = 0; i < dates.length; i++) {
-      var tweets = await getTweets(queries[j], dates[i], 100, "mixed");
+      var tweets = await getTweets(queries[j], dates[i], 100, "mixed", "sentiment");
       var sentiment = await getSentiment(tweets);
       //var ibmTweets = await getTweets(queries[j], dates[i], 100, "mixed");
 
 
 
       // Can put these all one one line.
-      // var googleTweets = await getTweets(queries[j], dates[i], 3, "popular");
-      // var googleSentiment = 0;
-      // for(var z= 0; z < googleTweets.length; z++){
-      //   googleSentiment = googleSentiment + (await getOneGoogleSentiment(googleTweets[z]));
-      //   console.log("Google sentiment: ", googleSentiment);
-      // }
+      var googleTweets = await getTweets(queries[j], dates[i], 15, "popular", "google");
+      var googleSentiment = 0;
+      //for(var z= 0; z < googleTweets.length; z++){
+        googleSentiment = await getGoogleSentiment(googleTweets);
+        console.log("Google sentiment: ", googleSentiment);
+      //}
 
       if (j === 0) {
         sentiment1.push(sentiment);
         ibmScore1.push(ibmScore[0]);//we dont even use this?
-        //googleSentimentarray1.push(googleSentiment);
+        googleSentimentarray1.push(googleSentiment);
 
       } else {
         sentiment2.push(sentiment);
         ibmScore2.push(ibmScore[0]);//we dont even use this?
-        //googleSentimentarray2.push(googleSentiment);
+        googleSentimentarray2.push(googleSentiment);
 
       }
     }
@@ -273,7 +280,7 @@ function getSentiment(tweets) {
   });
 }
 
-function getOneGoogleSentiment(tweet) {
+function getGoogleSentiment(tweet) {
   return new Promise(resolve => {
     var sentiment = 0;
     var document = {
@@ -283,15 +290,29 @@ function getOneGoogleSentiment(tweet) {
     google.analyzeSentiment({
       document: document
     }).then(results => {
+      var count = 0;
+      var sum = 0;
+      var sentences = results[0].sentences;
+      sentences.forEach(sentence => {
+          //if(sentence.sentiment.score !== 0){
+            sum = sum + sentence.sentiment.score;
+            count++;
+            console.log("Text: ", sentence.text);
+            console.log("Score: ", sentence.sentiment.score);
+            console.log("mag: ",sentence.sentiment.magnitude);
+          //}
+      });
+      console.log("count: ", count);
       sentiment = results[0].documentSentiment.score;
-      resolve(sentiment);
+      //resolve(results[0].documentSentiment.score);
+      resolve(sum/count);
     }).catch(err => {
       console.log(err);
     });
   })
 }
 
-function getTweets(query, day, count, result_type) {
+function getTweets(query, day, count, result_type, api) {
   return new Promise(resolve => {
     //console.log(query);
     var listoftweets = [];
@@ -309,7 +330,7 @@ function getTweets(query, day, count, result_type) {
           listoftweets.push(tweets.statuses[i].full_text); //text
         }
         //console.log(tweets.statuses.length);
-        listoftweets = ConsolodateTweets(listoftweets);
+        listoftweets = ConsolodateTweets(listoftweets, api);
         resolve(listoftweets);
       } else {
         console.log("error getting tweets");
@@ -318,18 +339,32 @@ function getTweets(query, day, count, result_type) {
   });
 }
 
-function ConsolodateTweets(x) {
+function ConsolodateTweets(listoftweets, api) {
   var array = [];
-  if (x.length <= 50) {
-    return array.push(x.join('.'));
-  } else {
-    var first = x.slice(0, 50);
-    first = first.join('.');
-    var second = x.slice(50, x.length);
-    second = second.join('.');
-    array.push(first, second);
+  if(api==="ibm"){
+    console.log("Got IBM API");
+    if (listoftweets.length <= 50) {
+      return array.push(listoftweets.join('.'));
+    } else {
+      var first = listoftweets.slice(0, 50);
+      first = first.join('.');
+      var second = listoftweets.slice(50, listoftweets.length);
+      second = second.join('.');
+      array.push(first, second);
+      return array;
+    }
+  }
+  if(api === "google"){
+    console.log("got Google API: ", listoftweets.length);
+    var newtweets = listoftweets.join();
+    array.push(newtweets);
     return array;
   }
+  if(api === "sentiment"){
+    console.log("got sentiment API");
+    return listoftweets;
+  }
+
 }
 
 function getArrayOfLastWeekDates() {
