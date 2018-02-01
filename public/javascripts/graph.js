@@ -82,20 +82,6 @@ let linegraph = new Chart(chart, {
             borderWidth: 3
         },
         {
-            label: first.concat(" For Google API"),
-            easing:'linear',
-            lineTension: 0,
-            fill: false,
-            data: [gx7, gx6, gx5, gx4, gx3, gx2, gx1],
-            backgroundColor: [
-                '#8c0909'
-            ],
-            borderColor: [
-                '#8c0909'
-            ],
-            borderWidth: 3
-        },
-        {
             label: second,
             lineTension: 0,
             fill: false,
@@ -105,19 +91,6 @@ let linegraph = new Chart(chart, {
             ],
             borderColor: [
                 '#0505DA'
-            ],
-            borderWidth: 3
-        },
-        {
-            label: second.concat(" For Google API"),
-            lineTension: 0,
-            fill: false,
-            data: [gy7, gy6, gy5, gy4, gy3, gy2, gy1],
-            backgroundColor: [
-               '#0e0c38'
-            ],
-            borderColor: [
-                '#0e0c38'
             ],
             borderWidth: 3
         }

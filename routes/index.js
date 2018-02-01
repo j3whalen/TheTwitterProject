@@ -119,14 +119,12 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
   // var sentiment2 = [.5,.5,.5,.5,.5,.5,.5];
   // var finalAllEmotional = [.5,.5,.5,.5,.5,.5,.5];
   // var finalAllEmotional2 = [.5,.5,.5,.5,.5,.5,.5];
-  // var googleSentimentarray1 = [.5,.5,.5,.5,.5,.5,.5];
-  // var googleSentimentarray2 = [.5,.5,.5,.5,.5,.5,.5];
+  var googleSentimentarray1 = [.5,.5,.5,.5,.5,.5,.5];
+  var googleSentimentarray2 = [.5,.5,.5,.5,.5,.5,.5];
   var sentiment1 = [];
   var sentiment2 = [];
   var finalAllEmotional = [];
   var finalAllEmotional2 = [];
-  var googleSentimentarray1 = [];
-  var googleSentimentarray2 = [];
 
   var ibmScore1 = [];
   var ibmScore2 = [];
@@ -136,41 +134,28 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
   var ibmCurrentName = 0;
 
   for (var j = 0; j < 2; j++) {
-    var IBMtweets = await getTweets(queries[j], "", 100, "mixed", "ibm");
-    for (var x = 0; x < IBMtweets.length; x++) {
+    var IBM = [];
+    var tweets = await getTweets(queries[j], "", 15, "popular");
+    console.log("length: ",tweets.length);
+    var IBMtweets = tweets.join('.');
+    IBM.push(IBMtweets);
+    for (var x = 0; x < IBM.length; x++) {
       if (j === 0) {
-        IBMresults = ibmScore + (await CalculateIBM(emotion, IBMtweets[x])); //get one ibm score/name is where we need to cycle through all the sentences and grab the score and names.
+        IBMresults = ibmScore + (await CalculateIBM(emotion, IBM[x])); //get one ibm score/name is where we need to cycle through all the sentences and grab the score and names.
         console.log("Before call");
-        // ibmName = ibmName + (await getOneIbmName(emotion, ibmTweets[x]));
       } else {
-        IBMresults = ibmScore + (await CalculateIBM(emotion2, IBMtweets[x]));//ibmresults is array [score, name]
+        IBMresults = ibmScore + (await CalculateIBM(emotion2, IBM[x]));//ibmresults is array [score, name]
       }
     }
     for (var i = 0; i < dates.length; i++) {
-      var tweets = await getTweets(queries[j], dates[i], 100, "mixed", "sentiment");
-      var sentiment = await getSentiment(tweets);
-      //var ibmTweets = await getTweets(queries[j], dates[i], 100, "mixed");
-
-
-
-      // Can put these all one one line.
-      var googleTweets = await getTweets(queries[j], dates[i], 15, "popular", "google");
-      var googleSentiment = 0;
-      //for(var z= 0; z < googleTweets.length; z++){
-        googleSentiment = await getGoogleSentiment(googleTweets);
-        console.log("Google sentiment: ", googleSentiment);
-      //}
+      var sentimenttweets = await getTweets(queries[j], dates[i], 15, "popular");
+      var sentiment = await getSentiment(sentimenttweets);
+      console.log(sentiment);
 
       if (j === 0) {
         sentiment1.push(sentiment);
-        ibmScore1.push(ibmScore[0]);//we dont even use this?
-        googleSentimentarray1.push(googleSentiment);
-
       } else {
         sentiment2.push(sentiment);
-        ibmScore2.push(ibmScore[0]);//we dont even use this?
-        googleSentimentarray2.push(googleSentiment);
-
       }
     }
     if (j == 0) {
@@ -190,9 +175,7 @@ async function GetTweetsAndComputeSentiment(queries, dates) {
       checkIfZero(finalAllEmotional2, emotion2.overallcount, emotion2.Confident);
       checkIfZero(finalAllEmotional2, emotion2.overallcount, emotion2.Tentative);
     }
-
   }
-
   return [sentiment1, sentiment2, googleSentimentarray1, googleSentimentarray2, finalAllEmotional, finalAllEmotional2];
 }
 
@@ -312,7 +295,7 @@ function getGoogleSentiment(tweet) {
   })
 }
 
-function getTweets(query, day, count, result_type, api) {
+function getTweets(query, day, count, result_type) {
   return new Promise(resolve => {
     //console.log(query);
     var listoftweets = [];
@@ -330,7 +313,6 @@ function getTweets(query, day, count, result_type, api) {
           listoftweets.push(tweets.statuses[i].full_text); //text
         }
         //console.log(tweets.statuses.length);
-        listoftweets = ConsolodateTweets(listoftweets, api);
         resolve(listoftweets);
       } else {
         console.log("error getting tweets");
@@ -344,7 +326,9 @@ function ConsolodateTweets(listoftweets, api) {
   if(api==="ibm"){
     console.log("Got IBM API");
     if (listoftweets.length <= 50) {
-      return array.push(listoftweets.join('.'));
+      var newtweets = listoftweets.join();
+      array.push(newtweets);
+      return array;
     } else {
       var first = listoftweets.slice(0, 50);
       first = first.join('.');
@@ -353,12 +337,6 @@ function ConsolodateTweets(listoftweets, api) {
       array.push(first, second);
       return array;
     }
-  }
-  if(api === "google"){
-    console.log("got Google API: ", listoftweets.length);
-    var newtweets = listoftweets.join();
-    array.push(newtweets);
-    return array;
   }
   if(api === "sentiment"){
     console.log("got sentiment API");
